@@ -1,12 +1,11 @@
-// src/components/Search.jsx
 import { useState } from "react";
-import { advancedSearchUsers } from "../services/githubService"; // adjust if your structure is different
+import { advancedSearchUsers } from "../services/githubService";
 
 function Search() {
   const [formData, setFormData] = useState({
     username: "",
     location: "",
-    repos: "",
+    minRepos: "",
   });
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -73,8 +72,8 @@ function Search() {
         />
         <input
           type="number"
-          name="repos"
-          value={formData.repos}
+          name="minRepos"
+          value={formData.minRepos}
           onChange={handleChange}
           placeholder="Minimum Public Repos (optional)"
           className="w-full p-2 border rounded"
