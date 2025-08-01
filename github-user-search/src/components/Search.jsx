@@ -101,7 +101,7 @@ function Search() {
       {loading && <p className="text-center mt-4">Loading...</p>}
       {error && (
         <p className="text-center mt-4 text-red-500">
-          Looks like we can't find the user
+          Looks like we cant find the user
         </p>
       )}
 
