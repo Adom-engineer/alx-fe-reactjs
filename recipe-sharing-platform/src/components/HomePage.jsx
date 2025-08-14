@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import recipesData from "../data.json"; // Import local JSON file
 
@@ -17,7 +17,7 @@ const HomePage = () => {
       </h1>
 
       {/* Grid Layout */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
@@ -31,9 +31,20 @@ const HomePage = () => {
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
               <p className="text-gray-600">{recipe.summary}</p>
-              <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                View Recipe
-              </button>
+              <div className="flex justify-between mt-4">
+                <Link
+                  to={`/recipe/${recipe.id}`}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  View Recipe
+                </Link>
+                <Link
+                  to="/add-recipe"
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Add New Recipe
+                </Link>
+              </div>
             </div>
           </div>
         ))}
