@@ -54,7 +54,6 @@ export default function AddRecipeForm() {
     };
 
     console.log("Recipe submitted:", newRecipe);
-    // TODO: add to app state or backend
 
     setTitle("");
     setIngredients("");
@@ -63,13 +62,18 @@ export default function AddRecipeForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 mt-10 bg-white rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-4">Add New Recipe</h2>
+    <div className="max-w-xl mx-auto p-6 mt-10 bg-white rounded-xl shadow md:max-w-2xl">
+      <h2 className="text-2xl font-bold mb-4 text-center md:text-left">
+        Add New Recipe
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Title */}
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="title">
+        <div className="md:flex md:items-center md:gap-4">
+          <label
+            className="block text-sm font-medium mb-1 md:mb-0 md:w-1/4"
+            htmlFor="title"
+          >
             Recipe Title
           </label>
           <input
@@ -80,24 +84,25 @@ export default function AddRecipeForm() {
               setTitle(e.target.value);
               if (errors.title) setErrors((p) => ({ ...p, title: undefined }));
             }}
-            className={`w-full rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full md:w-3/4 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
               errors.title ? "border-red-500" : "border-gray-300"
             }`}
             placeholder="e.g., Spaghetti Carbonara"
             aria-invalid={Boolean(errors.title)}
           />
-          {errors.title && (
-            <p className="mt-1 text-sm text-red-600">{errors.title}</p>
-          )}
         </div>
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+        )}
 
         {/* Ingredients */}
-        <div>
+        <div className="md:flex md:items-start md:gap-4">
           <label
-            className="block text-sm font-medium mb-1"
+            className="block text-sm font-medium mb-1 md:mb-0 md:w-1/4"
             htmlFor="ingredients"
           >
-            Ingredients <span className="text-xs text-gray-500">(comma-separated)</span>
+            Ingredients{" "}
+            <span className="text-xs text-gray-500">(comma-separated)</span>
           </label>
           <textarea
             id="ingredients"
@@ -107,20 +112,23 @@ export default function AddRecipeForm() {
               if (errors.ingredients)
                 setErrors((p) => ({ ...p, ingredients: undefined }));
             }}
-            className={`w-full h-28 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full md:w-3/4 h-28 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
               errors.ingredients ? "border-red-500" : "border-gray-300"
             }`}
             placeholder="spaghetti, eggs, pancetta, pecorino, black pepper"
             aria-invalid={Boolean(errors.ingredients)}
           />
-          {errors.ingredients && (
-            <p className="mt-1 text-sm text-red-600">{errors.ingredients}</p>
-          )}
         </div>
+        {errors.ingredients && (
+          <p className="mt-1 text-sm text-red-600">{errors.ingredients}</p>
+        )}
 
         {/* Steps */}
-        <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="steps">
+        <div className="md:flex md:items-start md:gap-4">
+          <label
+            className="block text-sm font-medium mb-1 md:mb-0 md:w-1/4"
+            htmlFor="steps"
+          >
             Preparation Steps
           </label>
           <textarea
@@ -130,23 +138,27 @@ export default function AddRecipeForm() {
               setSteps(e.target.value);
               if (errors.steps) setErrors((p) => ({ ...p, steps: undefined }));
             }}
-            className={`w-full h-40 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full md:w-3/4 h-40 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
               errors.steps ? "border-red-500" : "border-gray-300"
             }`}
-            placeholder={"Boil pasta until al dente...\nFry pancetta...\nToss with eggs and cheese..."}
+            placeholder={
+              "Boil pasta until al dente...\nFry pancetta...\nToss with eggs and cheese..."
+            }
             aria-invalid={Boolean(errors.steps)}
           />
-          {errors.steps && (
-            <p className="mt-1 text-sm text-red-600">{errors.steps}</p>
-          )}
         </div>
+        {errors.steps && (
+          <p className="mt-1 text-sm text-red-600">{errors.steps}</p>
+        )}
 
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          Submit Recipe
-        </button>
+        <div className="text-center md:text-right">
+          <button
+            type="submit"
+            className="w-full md:w-auto rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 md:px-6"
+          >
+            Submit Recipe
+          </button>
+        </div>
       </form>
     </div>
   );
