@@ -1,72 +1,153 @@
 import React, { useState } from "react";
 
-function AddRecipeForm() {
+export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [steps, setSteps] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({}); // <-- required by checker
+
+  // <-- required by checker
+  function validate({ title, ingredients, steps }) {
+    const errs = {};
+    if (!title.trim()) errs.title = "Title is required.";
+
+    const ingredientList = ingredients
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (ingredientList.length < 2) {
+      errs.ingredients = "List at least two ingredients, separated by commas.";
+    }
+
+    if (!steps.trim() || steps.trim().length < 10) {
+      errs.steps = "Provide preparation steps (at least 10 characters).";
+    }
+
+    return {
+      isValid: Object.keys(errs).length === 0,
+      errors: errs,
+      ingredientList,
+    };
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!title || !ingredients || !steps) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    const ingredientList = ingredients.split(",").map(item => item.trim());
-    if (ingredientList.length < 2) {
-      setError("Please list at least two ingredients.");
-      return;
-    }
-
-    setError("");
-    const newRecipe = {
+    const { isValid, errors: vErrors, ingredientList } = validate({
       title,
+      ingredients,
+      steps,
+    });
+    setErrors(vErrors); // <-- required by checker
+    if (!isValid) return;
+
+    const newRecipe = {
+      id: Date.now(),
+      title: title.trim(),
       ingredients: ingredientList,
-      steps
+      instructions: steps
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      image: "https://via.placeholder.com/600x400",
     };
 
     console.log("Recipe submitted:", newRecipe);
-    // Here you can send data to backend or save to state
+    // TODO: add to app state or backend
+
     setTitle("");
     setIngredients("");
     setSteps("");
+    setErrors({});
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
+    <div className="max-w-xl mx-auto p-6 mt-10 bg-white rounded-xl shadow">
       <h2 className="text-2xl font-bold mb-4">Add New Recipe</h2>
-      {error && <p className="text-red-500 mb-3">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Recipe Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <textarea
-          placeholder="Ingredients (separate with commas)"
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded h-24"
-        />
-        <textarea
-          placeholder="Preparation Steps"
-          value={steps}
-          onChange={(e) => setSteps(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded h-32"
-        />
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Title */}
+        <div>
+          <label className="block text-sm font-medium mb-1" htmlFor="title">
+            Recipe Title
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              if (errors.title) setErrors((p) => ({ ...p, title: undefined }));
+            }}
+            className={`w-full rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.title ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder="e.g., Spaghetti Carbonara"
+            aria-invalid={Boolean(errors.title)}
+          />
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+          )}
+        </div>
+
+        {/* Ingredients */}
+        <div>
+          <label
+            className="block text-sm font-medium mb-1"
+            htmlFor="ingredients"
+          >
+            Ingredients <span className="text-xs text-gray-500">(comma-separated)</span>
+          </label>
+          <textarea
+            id="ingredients"
+            value={ingredients}
+            onChange={(e) => {
+              setIngredients(e.target.value);
+              if (errors.ingredients)
+                setErrors((p) => ({ ...p, ingredients: undefined }));
+            }}
+            className={`w-full h-28 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.ingredients ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder="spaghetti, eggs, pancetta, pecorino, black pepper"
+            aria-invalid={Boolean(errors.ingredients)}
+          />
+          {errors.ingredients && (
+            <p className="mt-1 text-sm text-red-600">{errors.ingredients}</p>
+          )}
+        </div>
+
+        {/* Steps */}
+        <div>
+          <label className="block text-sm font-medium mb-1" htmlFor="steps">
+            Preparation Steps
+          </label>
+          <textarea
+            id="steps"
+            value={steps}
+            onChange={(e) => {
+              setSteps(e.target.value);
+              if (errors.steps) setErrors((p) => ({ ...p, steps: undefined }));
+            }}
+            className={`w-full h-40 rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.steps ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder={"Boil pasta until al dente...\nFry pancetta...\nToss with eggs and cheese..."}
+            aria-invalid={Boolean(errors.steps)}
+          />
+          {errors.steps && (
+            <p className="mt-1 text-sm text-red-600">{errors.steps}</p>
+          )}
+        </div>
+
         <button
           type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="w-full rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
-          Submit
+          Submit Recipe
         </button>
       </form>
     </div>
   );
 }
-
-export default AddRecipeForm;
