@@ -9,15 +9,17 @@ export default function RegistrationForm() {
 
   const [errors, setErrors] = useState({});
 
+  const { username, email, password } = formData;
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
+    if (!username) newErrors.username = 'Username is required';
+    if (!email) newErrors.email = 'Email is required';
+    if (!password) newErrors.password = 'Password is required';
     return newErrors;
   };
 
@@ -37,7 +39,7 @@ export default function RegistrationForm() {
       <input
         name="username"
         placeholder="Username"
-        value={formData.username}
+        value={username}
         onChange={handleChange}
       />
       {errors.username && <p>{errors.username}</p>}
@@ -45,7 +47,7 @@ export default function RegistrationForm() {
       <input
         name="email"
         placeholder="Email"
-        value={formData.email}
+        value={email}
         onChange={handleChange}
       />
       {errors.email && <p>{errors.email}</p>}
@@ -54,7 +56,7 @@ export default function RegistrationForm() {
         name="password"
         type="password"
         placeholder="Password"
-        value={formData.password}
+        value={password}
         onChange={handleChange}
       />
       {errors.password && <p>{errors.password}</p>}
